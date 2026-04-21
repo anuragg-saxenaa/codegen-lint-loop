@@ -1,0 +1,25 @@
+{
+  "name": "codegen-lint-loop",
+  "version": "1.0.0",
+  "description": "CLI that wraps any code-gen command and auto-runs lint → test → fix cycles until code passes or max iterations hit",
+  "bin": {
+    "codegen-lint-loop": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsc --watch"
+  },
+  "dependencies": {
+    "commander": "^12.0.0",
+    "execa": "^9.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.4.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "license": "MIT"
+}
