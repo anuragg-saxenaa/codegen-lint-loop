@@ -34,10 +34,13 @@ function parseLintOutput(rawOutput: string): string[] {
 
     const trimmed = line.trim();
 
-    // ESLint: src/auth.ts:5:10 error ...
+    // ESLint: src/auth.ts:5:10 error ... (skip warnings/info)
     const eslintMatch = trimmed.match(/^\[?\s*(\S+\.(?:ts|js|tsx|jsx|py|java|cpp|c|go|rs|swift|kt)):(\d+)(?::\d+)?\s+(?:error|warning)\s+(.+?)(?:\s+\[\S+\])?$/);
     if (eslintMatch) {
-      errors.push(`${eslintMatch[1]}:${eslintMatch[2]} — ${eslintMatch[3]}`);
+      const severity = trimmed.match(/\s+(error|warning|info|note|hint)\s+/i)?.[1] || '';
+      if (/^error$/i.test(severity)) {
+        errors.push(`${eslintMatch[1]}:${eslintMatch[2]} — ${eslintMatch[3]}`);
+      }
       continue;
     }
 
