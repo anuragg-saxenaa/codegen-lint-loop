@@ -23,7 +23,7 @@ export async function runTests(testCmd: string): Promise<TestResult> {
   }
 }
 
-function parseTestOutput(rawOutput: string): string[] {
+export function parseTestOutput(rawOutput: string): string[] {
   const errors: string[] = [];
   const lines = rawOutput.split('\n');
 

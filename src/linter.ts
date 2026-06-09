@@ -23,7 +23,7 @@ export async function runLinter(lintCmd: string): Promise<LintResult> {
   }
 }
 
-function parseLintOutput(rawOutput: string): string[] {
+export function parseLintOutput(rawOutput: string): string[] {
   const errors: string[] = [];
   const lines = rawOutput.split('\n');
 

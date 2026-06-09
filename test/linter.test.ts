@@ -1,49 +1,5 @@
 import { describe, it, expect } from 'vitest';
-
-// Test the parseLintOutput and parseTestOutput logic directly
-// by re-implementing the parsing as a standalone test helper
-
-function parseLintOutput(rawOutput: string): string[] {
-  const errors: string[] = [];
-  const lines = rawOutput.split('\n');
-
-  for (const line of lines) {
-    if (/^\s*(warning|info|note|hint|✗|⚠)/i.test(line)) continue;
-    if (/^\s*(\d+\s+(warning|error|issue)|errors?\s+(0|suppressed))/i.test(line)) continue;
-
-    const trimmed = line.trim();
-
-    const eslintMatch = trimmed.match(/^\[?\s*(\S+\.(?:ts|js|tsx|jsx|py|java|cpp|c|go|rs|swift|kt)):(\d+)(?::\d+)?\s+(?:error|warning)\s+(.+?)(?:\s+\[\S+\])?$/);
-    if (eslintMatch) {
-      errors.push(`${eslintMatch[1]}:${eslintMatch[2]} — ${eslintMatch[3]}`);
-      continue;
-    }
-
-    const genericMatch = trimmed.match(/^(\/.+?|\.\/.+?|[a-z]\:.+?):(\d+)(?::\d+)?\s+(.+)$/);
-    if (genericMatch && /^(error|fail)/i.test(genericMatch[3])) {
-      errors.push(`${genericMatch[1]}:${genericMatch[2]} — ${genericMatch[3]}`);
-      continue;
-    }
-
-    const pyMatch = trimmed.match(/^(\.\/.+?|[a-z]\:.+?):(\d+)\s+(E\d+)\s+(.+)$/);
-    if (pyMatch) {
-      errors.push(`${pyMatch[1]}:${pyMatch[2]} (${pyMatch[3]}) — ${pyMatch[4]}`);
-      continue;
-    }
-
-    const rustMatch = trimmed.match(/^error(?:\[[^\]]+\])?\s*:\s*(.+)$/);
-    if (rustMatch) {
-      errors.push(`rust: ${rustMatch[1]}`);
-      continue;
-    }
-
-    if (/^(error|ERROR|failed|FAILED|✗)/.test(trimmed) && trimmed.length > 3 && trimmed.length < 200) {
-      errors.push(trimmed);
-    }
-  }
-
-  return [...new Set(errors)];
-}
+import { parseLintOutput } from '../src/linter.js';
 
 describe('parseLintOutput', () => {
   it('returns empty errors for clean output', () => {
